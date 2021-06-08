@@ -9,7 +9,7 @@ import cl.maleb.testtransbank.api.list.Result
 import cl.maleb.testtransbank.databinding.ItemMovieListBinding
 import com.bumptech.glide.Glide
 
-class MovieListAdapter :
+class MovieListAdapter(private val listener: OnItemClickListener) :
     ListAdapter<Result, MovieListAdapter.MovieListViewHolder>(MovieListComparator()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieListViewHolder {
@@ -21,14 +21,17 @@ class MovieListAdapter :
     override fun onBindViewHolder(holder: MovieListViewHolder, position: Int) {
         val currentItem = getItem(position)
         if (currentItem != null) {
-            holder.bind(currentItem)
+            holder.bind(currentItem, listener)
         }
     }
 
     class MovieListViewHolder(private val binding: ItemMovieListBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(result: Result) {
+        fun bind(result: Result, listener: OnItemClickListener) {
             binding.apply {
+                root.setOnClickListener {
+                    listener.onItemClick(result)
+                }
                 Glide.with(itemView)
                     .load(result.imageUrl)
                     .into(imageView)
@@ -46,6 +49,10 @@ class MovieListAdapter :
         override fun areContentsTheSame(oldItem: Result, newItem: Result) =
             oldItem == newItem
 
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(result: Result)
     }
 
 

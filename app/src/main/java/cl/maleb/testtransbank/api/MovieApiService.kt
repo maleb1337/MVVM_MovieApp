@@ -23,7 +23,7 @@ interface MovieApiService {
 
     @GET(GET_MOVIE_DETAIL)
     suspend fun getMovieDetail(
-        @Query("api_key") apiKey: String = BuildConfig.API_KEY,
-        @Path("movieId") movieId: String
+        @Path("movieId") movieId: String,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY
     ): MovieDetailData
 }

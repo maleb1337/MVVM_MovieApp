@@ -7,5 +7,19 @@
     <fragment
         android:id="@+id/movieListFragment"
         android:name="cl.maleb.testtransbank.ui.list.MovieListFragment"
-        android:label="MovieListFragment" />
+        android:label="MovieListFragment">
+        <action
+            android:id="@+id/action_movieListFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieDetailFragment"
+        android:name="cl.maleb.testtransbank.ui.detail.MovieDetailFragment"
+        android:label="MovieDetailFragment">
+        <argument
+            android:name="identifier"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
 </navigation>

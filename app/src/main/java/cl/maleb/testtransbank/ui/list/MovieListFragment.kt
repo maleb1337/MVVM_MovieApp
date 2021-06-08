@@ -6,17 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import cl.maleb.testtransbank.R
 import cl.maleb.testtransbank.api.list.MovieListData
+import cl.maleb.testtransbank.api.list.Result
 import cl.maleb.testtransbank.databinding.FragmentMovieListBinding
 import cl.maleb.testtransbank.utils.Resource
 import cl.maleb.testtransbank.utils.gone
 import cl.maleb.testtransbank.utils.visible
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
-class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
+class MovieListFragment : Fragment(R.layout.fragment_movie_list),
+    MovieListAdapter.OnItemClickListener {
 
     private val viewModel: MovieListViewModel by viewModels()
 
@@ -41,7 +46,7 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
     }
 
     private fun setUpView() {
-        movieListAdapter = MovieListAdapter()
+        movieListAdapter = MovieListAdapter(this)
         binding.apply {
             recyclerView.apply {
                 adapter = movieListAdapter
@@ -63,6 +68,20 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
                 is Resource.Success -> showSuccessView(result.data)
             }
         })
+
+        viewLifecycleOwner.lifecycleScope.launchWhenCreated {
+            viewModel.movieListEvent.collect { event ->
+                when (event) {
+                    is MovieListEvent.NavigateToDetailScreen -> {
+                        val action =
+                            MovieListFragmentDirections.actionMovieListFragmentToMovieDetailFragment(
+                                identifier = event.movieIdentifier
+                            )
+                        findNavController().navigate(action)
+                    }
+                }
+            }
+        }
     }
 
     private fun showSuccessView(data: MovieListData?) {
@@ -91,6 +110,10 @@ class MovieListFragment : Fragment(R.layout.fragment_movie_list) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onItemClick(result: Result) {
+        viewModel.onMovieSelected(result.id.toString())
     }
 
 

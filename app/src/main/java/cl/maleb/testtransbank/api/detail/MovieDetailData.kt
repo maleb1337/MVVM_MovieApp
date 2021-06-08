@@ -2,6 +2,7 @@ package cl.maleb.testtransbank.api.detail
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import cl.maleb.testtransbank.utils.BASE_IMAGE_URL
 
 @Entity(tableName = "movieDetailDataTable")
 data class MovieDetailData(
@@ -29,4 +30,9 @@ data class MovieDetailData(
     val video: Boolean? = null,
     val vote_average: Double? = null,
     val vote_count: Int? = null
-)
+) {
+    val imageUrl: String
+        get() {
+            return "$BASE_IMAGE_URL$poster_path"
+        }
+}
