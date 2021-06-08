@@ -1,5 +1,7 @@
 package cl.maleb.testtransbank.api.list
 
+import cl.maleb.testtransbank.utils.BASE_IMAGE_URL
+
 data class Result(
     val adult: Boolean? = null,
     val backdrop_path: String? = null,
@@ -15,4 +17,10 @@ data class Result(
     val video: Boolean? = null,
     val vote_average: Double? = null,
     val vote_count: Int? = null
-)
+) {
+    val imageUrl: String
+        get() {
+            return "${BASE_IMAGE_URL}${poster_path}"
+        }
+
+}

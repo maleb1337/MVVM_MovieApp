@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TestTransbank</string>
+    <string name="retry">Reintentar</string>
+    <string name="empty_content_description" />
 </resources>
